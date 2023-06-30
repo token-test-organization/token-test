@@ -1,4 +1,4 @@
-name: PR Auto Assign Test
+name: PR Auto Assign
 
 on:
   pull_request:
