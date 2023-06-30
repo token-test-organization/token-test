@@ -1,0 +1,22 @@
+name: PR Auto Assign
+
+on:
+  pull_request:
+
+jobs:
+  reviewer:
+    if: github.base_ref!= 'develop' # ignore the pull request merging into develop branch.
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              team_reviewers: ['softphone']
+            })
