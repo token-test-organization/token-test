@@ -5,7 +5,7 @@ on:
 
 jobs:
   reviewer:
-    if: !github.event.pull_request.assignee
+    if: ${{ !github.event.pull_request.assignee }}
     runs-on: ubuntu-latest
     timeout-minutes: 1
 
