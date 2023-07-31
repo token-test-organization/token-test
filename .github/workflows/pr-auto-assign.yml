@@ -2,7 +2,7 @@ name: PR Auto Assign
 
 on:
   pull_request:
-    types: [opened, ready_for_review]
+    types: [opened, ready_for_review, converted_to_draft]
 
 jobs:
   assignee:
@@ -46,4 +46,28 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               team_reviewers: ['test']
+            })
+
+  remove-reviewer:
+    if: github.event.pull_request.draft == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - name: Generate github token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          # https://github.com/apps/keydata-softphone
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ steps.generate_token.outputs.token }}
+          script: |
+            github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              team_reviewers: []
             })
