@@ -65,9 +65,10 @@ jobs:
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
           script: |
-            github.rest.pulls.requestReviewers({
+            github.rest.pulls.removeReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
-              team_reviewers: []
+              reviewers: [],
+              team_reviewers: ['test']
             })
